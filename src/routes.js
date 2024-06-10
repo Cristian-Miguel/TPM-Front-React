@@ -11,6 +11,7 @@ import Message from './pages/messages';
 import Payment from './pages/payment';
 import Products from './pages/products';
 import Reservation from './pages/reservation';
+import PrivateRoute from './utils/private_route'
 
 const Routes = () => {
     <Switch>
@@ -19,12 +20,13 @@ const Routes = () => {
         <Route path='/info_product' Component={Info_Product} />
         <Route path='/signup' Component={SignUp} />
         <Route path='/signin' Component={SignIn} />
-        <Route path='/account_setting' Component={Account_Setting} />
-        <Route path='/chat' Component={Chat} />
-        <Route path='/message' Component={Message} />
-        <Route path='/favorite' Component={Favorites} />
+        <PrivateRoute path='/account_setting' Component={Account_Setting} />
+        <PrivateRoute path='/chat' Component={Chat} />
+        <PrivateRoute path='/message' Component={Message} />
+        <PrivateRoute path='/favorite' Component={Favorites} />
         <Route path='/payment' Component={Payment} />
         <Route path='/reservation' Component={Reservation} />
+        <PrivateRoute path='/reservation/user:id' Component={Reservation} />
     </Switch>
 }
 
