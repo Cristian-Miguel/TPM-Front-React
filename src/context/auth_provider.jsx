@@ -1,11 +1,20 @@
 import { AuthContext } from "./auth_context";
 import { AuthReducer } from "./auth_reducer";
 
-const initialState = { logged: false, }
+// const initialState = { logged: false, }
+
+const init = () => {
+    const user = JSON.parse( localStorage.getItem('user') );
+
+    return {
+        logged: !!user,
+        user: user
+    }
+}
 
 export const AuthProvider = ({ children }) => {
 
-    const [ AuthState, dispatch ] = useReducer( AuthReducer, initialState );
+    const [ AuthState, dispatch ] = useReducer( AuthReducer, {}, init );
 
     const [user, setUser] = useState(null);
 
@@ -23,14 +32,21 @@ export const AuthProvider = ({ children }) => {
             payload: userData
         }
 
-        // setUser(userData);
-        // localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
+        dispatch(action);
     };
 
     const logout = () => {
-        // setUser(null);
-        // localStorage.removeItem('user');
-        // useHistory().push('/sign-in');
+        setUser(null);
+
+        const action = {
+            type: Types.logout
+        }
+
+        localStorage.removeItem('user');
+        dispatch(action); 
+        useHistory().push('/sign-in');
     };
 
     return (
