@@ -1,9 +1,5 @@
 import { Types } from './types/types';
 
-const initialState = {
-    logged: false
-}
-
 export const AuthReducer = ( state = {}, action ) => {
 
     switch (action.type) {

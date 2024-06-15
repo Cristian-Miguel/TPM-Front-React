@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { Route, Redirect } from 'react-router-dom';
-import { AuthContext } from './context/AuthContext';
+import { Route, Navigate } from 'react-router-dom';
+import { AuthContext } from '../context';
 
 const PublicRoute = ({ component: Component, ...rest }) => {
   const { logged } = useContext( AuthContext );
@@ -10,7 +10,8 @@ const PublicRoute = ({ component: Component, ...rest }) => {
       {...rest}
       render={(props) =>
         logged ? (
-            <Redirect to={{ pathname: '/', state: { from: props.location } }} />
+            // <Redirect to={{ pathname: '/', state: { from: props.location } }} />
+            <Navigate to="/" />
         ) : (
             <Component {...props} />
         )
