@@ -1,9 +1,9 @@
 import React from 'react';
 
-const Info_Product = () => {
+const InfoProduct = () => {
     return(
         <h1>SignIn</h1>
     );
 }
 
-export default Info_Product;
+export default InfoProduct;

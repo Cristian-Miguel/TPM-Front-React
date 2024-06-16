@@ -2,7 +2,13 @@ import React from 'react';
 
 const Products = () => {
     return(
-        <h1>Products</h1>
+        <>
+            <div id='products'>
+
+                <h1>Products</h1>
+
+            </div>
+        </>
     );
 }
 

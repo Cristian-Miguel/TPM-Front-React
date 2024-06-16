@@ -1,41 +1,44 @@
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Home from '../pages/home';
-import SignUp from '../pages/sign_up';
-import SignIn from '../pages/sign_in';
-import Account_Setting from '../pages/account_settings';
+
+import AccountSetting from '../pages/account_settings';
 import Chat from '../pages/chat';
+import Home from '../pages/home';
 import Favorites from '../pages/favorites';
-import Info_Product from '../pages/info_product';
+import InfoProduct from '../pages/info_product';
 import Message from '../pages/messages';
 import Payment from '../pages/payment';
 import Products from '../pages/products';
 import Reservation from '../pages/reservation';
+import SignUp from '../pages/sign_up';
+import SignIn from '../pages/sign_in';
+
 import PrivateRoute from './private_route';
 import PublicRoute from './public_route'
 
 const RootRoutes = () => {
-    <>
-        <Routes>
+    return (
+        <>
+            <Routes>
 
-            <Route exact path='/' Component={ Home } />
-            <Route path='/products' Component={ Products } />
-            <Route path='/info_product' Component={ Info_Product } />
-            <Route path='/payment' Component={ Payment } />
-            <Route path='/reservation' Component={ Reservation } />
+                <Route exact path='/'       element={ <Home/> } />
+                <Route path='/products'     element={ <Products/> } />
+                <Route path='/info_product' element={ <InfoProduct/> } />
+                <Route path='/payment'      element={ <Payment/> } />
+                <Route path='/reservation'  element={ <Reservation/> } />
 
-            <PublicRoute path='/signup' Component={ SignUp } />
-            <PublicRoute path='/signin' Component={ SignIn } />
+                <Route path='/signup'       element={ <PublicRoute> <SignUp/> </PublicRoute> } />
+                <Route path='/signin'       element={ <PublicRoute> <SignIn/> </PublicRoute> } />
 
-            <PrivateRoute path='/account_setting' Component={ Account_Setting } />
-            <PrivateRoute path='/chat' Component={ Chat } />
-            <PrivateRoute path='/message' Component={ Message } />
-            <PrivateRoute path='/favorite' Component={ Favorites } />
-            <PrivateRoute path='/reservation:id' Component={ Reservation } />
-
-        </Routes>
-
-    </>
+                <Route path='/account_setting'  element={ <PrivateRoute> <AccountSetting/> </PrivateRoute> } />
+                <Route path='/chat'             element={ <PrivateRoute> <Chat/> </PrivateRoute> } />
+                <Route path='/message'          element={ <PrivateRoute> <Message/> </PrivateRoute> } />
+                <Route path='/favorite'         element={ <PrivateRoute> <Favorites></Favorites> </PrivateRoute> } />
+                <Route path='/reservation:id'   element={ <PrivateRoute> <Reservation/> </PrivateRoute> } />
+            
+            </Routes>
+        </>
+    );
 }
 
 export default RootRoutes;
+

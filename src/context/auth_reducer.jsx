@@ -1,6 +1,6 @@
-import { Types } from './types/types';
+import Types from './types/types';
 
-export const AuthReducer = ( state = {}, action ) => {
+const AuthReducer = ( state = {}, action ) => {
 
     switch (action.type) {
         case Types.signin:
@@ -25,3 +25,5 @@ export const AuthReducer = ( state = {}, action ) => {
             return state;
     }
 }
+
+export default AuthReducer;
