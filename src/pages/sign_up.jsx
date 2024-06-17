@@ -1,6 +1,7 @@
-import { React, useState } from 'react';
-import {  PlusOutlined, LoadingOutlined  } from '@ant-design/icons';
-import { DatePicker, Upload, Col, Row, Form, Input, message, Space, Button } from "antd";
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PlusOutlined, LoadingOutlined  } from '@ant-design/icons';
+import { DatePicker, Upload, Col, Row, Form, Input, message, Space, Button, Spin, Flex, InputNumber } from "antd";
 import '../css/sign_up.css'
 
 const getBase64 = (img, callback) => {
@@ -12,7 +13,25 @@ const getBase64 = (img, callback) => {
 const SignUp = () => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
+    const [spinning, setSpinning] = React.useState(false);
     const [imageUrl, setImageUrl] = useState();
+    const navigate = useNavigate();
+
+    const signUp = () => {
+        form.validateFields().then(() => {
+            setSpinning(true);
+
+            setTimeout(() => {
+
+                setLoading(false);
+                navigate('/');
+                setSpinning(false);
+
+            }, 1500);
+        }).catch((errorInfo) => {
+            message.error('Please fill in all required fields correctly.');
+        });
+    }
 
     const beforeUpload = (file) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
@@ -92,8 +111,6 @@ const SignUp = () => {
                         <Form.Item 
                             label="User Image" 
                             valuePropName="oneImage" 
-                            // getValueFromEvent={normFile}
-                            style={{ flex:'auto', alignSelf:'center' }}
                         >
                             <Upload
                                 name="avatar"
@@ -189,13 +206,27 @@ const SignUp = () => {
                         <h2>Personal information</h2>
                         
                         <Form.Item
-                            label="Full Name"
-                            name="fullname"
+                            label="First name"
+                            name="firsrname"
                             rules={[
                                 {
                                     type:'string',
                                     required: true,
-                                    message: 'Please input your full name!',
+                                    message: 'Please input your first name!',
+                                },
+                            ]}
+                            >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Last name"
+                            name="lastname"
+                            rules={[
+                                {
+                                    type:'string',
+                                    required: true,
+                                    message: 'Please input your last name!',
                                 },
                             ]}
                             >
@@ -217,26 +248,68 @@ const SignUp = () => {
                         </Form.Item>
 
                         <Form.Item
-                            label="Direction "
-                            name="fullname"
+                            label="Street address"
+                            name="streetAddress"
                             rules={[
                                 {
                                     type:'string',
                                     required: true,
-                                    message: 'Please input your full name!',
+                                    message: 'Please input your street address!',
                                 },
                             ]}
                             >
                             <Input />
                         </Form.Item>
 
-                        <Form.Item style={{ width:'100%' }}>
+                        <Form.Item
+                            label="City"
+                            name="city"
+                            rules={[
+                                {
+                                    type:'string',
+                                    required: true,
+                                    message: 'Please input your city!',
+                                },
+                            ]}
+                            >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="State"
+                            name="state"
+                            rules={[
+                                {
+                                    type:'string',
+                                    required: true,
+                                    message: 'Please input your state!',
+                                },
+                            ]}
+                            >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
+                            label="Zip Code"
+                            name="zipCode"
+                            rules={[
+                                {
+                                    type:'integer',
+                                    required: true,
+                                    message: 'Please input your zip code!',
+                                },
+                            ]}
+                        >
+                            <InputNumber style={{ width: '100%' }} />
+                        </Form.Item>
+
+                        <Form.Item style={{ width:'100%', display:'flex', justifyContent:'right' }}>
                             <Space>
                                 <Button htmlType="button" onClick={onReset}>
                                     Reset
                                 </Button>
 
-                                <Button type="primary" htmlType="submit" style={{ width:'300px' }}>
+                                <Button type="primary" htmlType="submit" style={{ width:'300px' }} onClick={signUp}>
                                     Submit
                                 </Button>
                             </Space>
@@ -247,6 +320,20 @@ const SignUp = () => {
                 <Col span={7} push={0}></Col>
             </Row>
             
+            <Flex gap="small">
+                <Spin 
+                    tip="Loading" 
+                    spinning={spinning} 
+                    fullscreen
+                > 
+                    <div 
+                        style={{  
+                            padding: 50,
+                            background: 'rgba(0, 0, 0, 0.05)',
+                            borderRadius: 4,
+                        }} /> 
+                </Spin>
+            </Flex>
         </div>
     );
 }

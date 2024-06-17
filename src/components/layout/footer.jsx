@@ -1,12 +1,14 @@
 import React from 'react';
+import { Layout } from 'antd';
+import { secondColor } from '../common/colors';
 
-const Footer = () => {
+const MainFooter = () => {
 
     return(
-        <footer>
+        <Layout.Footer style={{ backgroundColor:secondColor }} >
             Footer
-        </footer>
+        </Layout.Footer>
     );
 }
 
-export default Footer;
+export default MainFooter;
