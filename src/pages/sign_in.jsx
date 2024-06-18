@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import FrontImage from '../assets/hermosa-playa-tropical.jpg'
+import FrontImage from '../assets/hermosa-playa-tropical.jpg';
 import { Button, Space, Col, Row, Modal, Form, Input, Checkbox } from "antd";
 import '../css/sign_in.css'
 

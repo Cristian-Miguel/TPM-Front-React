@@ -1,5 +1,6 @@
 import React from 'react';
-import { Col, Row, Layout } from "antd";
+import { Col, Row, Layout, Flex} from "antd";
+import PromosImage from '../assets/daniela-cuevas-t7YycgAoVSw-unsplash.jpg';
 import MainHeader from '../components/layout/header';
 import MainFooter from '../components/layout/footer';
 import '../css/home.css';
@@ -12,14 +13,19 @@ const Home = () => {
                     <MainHeader/>
                     
                     <Layout.Content style={{ minHeight: 1500, width:'100%' }}>
-                        <h1>Home</h1>
-
-                        <p>Hello world</p>
+                        <Flex justify='center'>
+                            <h1>Home</h1>
+                            <p>Discover your best adventure</p>
+                        </Flex>
 
                         <Row justify={'center'} align={'middle'}>
-                            <Col span={2}>2</Col>
-                            <Col span={20}>20</Col>
-                            <Col span={2}>2</Col>
+                            <Col span={2}></Col>
+                            <Col span={20}>
+                                <figure id = 'PromosImageContainer'>
+                                    <img src={PromosImage} alt="promotion image" id='PromosContainer' />
+                                </figure>
+                            </Col>
+                            <Col span={2}></Col>
                         </Row>
 
                         <Row>
