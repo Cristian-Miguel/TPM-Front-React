@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PlusOutlined, LoadingOutlined  } from '@ant-design/icons';
 import { DatePicker, Upload, Col, Row, Form, Input, message, Space, Button, Spin, Flex, InputNumber } from "antd";
+import { signInUser } from '../services/api/sign_in'
 import '../css/sign_up.css'
 
 const getBase64 = (img, callback) => {
@@ -18,16 +19,26 @@ const SignUp = () => {
     const navigate = useNavigate();
 
     const signUp = () => {
-        form.validateFields().then(() => {
+        form.validateFields().then( (values) => {
             setSpinning(true);
 
-            setTimeout(() => {
+            setTimeout(async() => {
+                const data = {
+                    ...values,
+                    birth_day: values.birth_day.format('YYYY-MM-DDThh:mm:ss'),
+                    image_profile: imageUrl
+                };
+
+                await signInUser(data);
+
+                message.success('Registration successful!');
 
                 setLoading(false);
                 navigate('/');
                 setSpinning(false);
 
             }, 1500);
+
         }).catch((errorInfo) => {
             message.error('Please fill in all required fields correctly.');
         });
@@ -113,7 +124,7 @@ const SignUp = () => {
                             valuePropName="oneImage" 
                         >
                             <Upload
-                                name="avatar"
+                                name="image_profile"
                                 listType="picture-card"
                                 className="avatar-uploader"
                                 showUploadList={false}
@@ -207,7 +218,7 @@ const SignUp = () => {
                         
                         <Form.Item
                             label="First name"
-                            name="firsrname"
+                            name="first_name"
                             rules={[
                                 {
                                     type:'string',
@@ -221,7 +232,7 @@ const SignUp = () => {
 
                         <Form.Item
                             label="Last name"
-                            name="lastname"
+                            name="last_name"
                             rules={[
                                 {
                                     type:'string',
@@ -235,7 +246,7 @@ const SignUp = () => {
 
                         <Form.Item
                             label="Birth date"
-                            name="birthDate"
+                            name="birth_day"
                             rules={[
                                 {
                                     type:'date',
@@ -249,7 +260,7 @@ const SignUp = () => {
 
                         <Form.Item
                             label="Street address"
-                            name="streetAddress"
+                            name="street"
                             rules={[
                                 {
                                     type:'string',
@@ -290,8 +301,22 @@ const SignUp = () => {
                         </Form.Item>
 
                         <Form.Item
+                            label="Country"
+                            name="country"
+                            rules={[
+                                {
+                                    type:'string',
+                                    required: true,
+                                    message: 'Please input your country!',
+                                },
+                            ]}
+                            >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item
                             label="Zip Code"
-                            name="zipCode"
+                            name="zip_code"
                             rules={[
                                 {
                                     type:'integer',
