@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PlusOutlined, LoadingOutlined  } from '@ant-design/icons';
 import { DatePicker, Upload, Col, Row, Form, Input, message, Space, Button, Spin, Flex, InputNumber } from "antd";
-import { signInUser } from '../services/api/sign_in'
+import { signUpUser } from '../services/api/sign_up'
 import '../css/sign_up.css'
 
 const getBase64 = (img, callback) => {
@@ -29,7 +29,7 @@ const SignUp = () => {
                     image_profile: imageUrl
                 };
 
-                await signInUser(data);
+                await signUpUser(data);
 
                 message.success('Registration successful!');
 

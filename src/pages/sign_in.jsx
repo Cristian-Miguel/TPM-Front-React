@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import FrontImage from '../assets/hermosa-playa-tropical.jpg';
-import { Button, Space, Col, Row, Modal, Form, Input, Checkbox } from "antd";
+import { Button, Space, Col, Row, Modal, Form, Input, Checkbox, message } from "antd";
+import { signInUser } from '../services/api/sign_in';
 import '../css/sign_in.css'
 
 const SignIn = () => {
+    const [form] = Form.useForm();
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -26,12 +28,34 @@ const SignIn = () => {
     };
 
     const onSignIn = () => {
-        setTimeout(() => {
-            setOpen(false);
-            setConfirmLoading(false);
+        form.validateFields().then( (values) => {
+
+            setTimeout(async( ) => {
+
+                try {
+                    const response = await signInUser(values);
+
+                    message.success('Sign in successful!');
+
+                    if (response && response.success) {
+                        setOpen(false);
+                        navigate('/');
+                    } else {
+                        message.error('Sign in failed. Please check your username and password.');
+                    }
+                } catch (error) {
+                    message.error('An error occurred. Please try again.');
+                } finally {
+                    setLoading(false);
+                    setConfirmLoading(false);
+                }
+                
+            }, 1500);
+
+        }).catch((errorInfo) => {
+            message.error('Please fill in all required fields correctly.');
             setLoading(false);
-            navigate('/');
-        }, 2000);
+        });
     };
 
     return(
@@ -103,11 +127,12 @@ const SignIn = () => {
                                         layout="vertical"
                                         style={{ maxWidth: 600  }}
                                         autoComplete='off'
+                                        form={form}
                                     >
 
                                         <Form.Item
-                                            label="Username"
-                                            name="username"
+                                            label="Email"
+                                            name="email"
                                             rules={[
                                                 {
                                                     type:'email',
@@ -193,18 +218,6 @@ const SignIn = () => {
                             </Space>
 
                         </Row>
-
-                        {/* <Space direction="vertical" size={16}>
-
-                            <Card
-                                title="SignIn"
-                                style={{
-                                    width: 600,
-                                    textAlign:"center"
-                                }}
-                            >
-                            </Card>
-                        </Space> */}
                     </Col>
                 </Row>
             </div>                           

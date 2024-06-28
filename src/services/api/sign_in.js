@@ -7,8 +7,10 @@ export const signInUser = async (data) => {
     try {
         const hashedPassword = await hashPassword(data.password);
 
+        console.log('password' + hashPassword[2, 52]);
+
         const payload = {
-            ...data,
+            email: data.email,
             password: hashedPassword,
         };
 

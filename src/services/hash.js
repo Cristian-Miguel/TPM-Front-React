@@ -7,8 +7,15 @@ const sha256Encode = (password) => {
 
 export const hashPassword = async (password) => {
     const hashDigest = sha256Encode(password);
+    // console.log(hashDigest);
+    // console.log(process.env.REACT_APP_PATHPASS);
+    // console.log(process.env.REACT_APP_PRIVATEKEY);
+    
+    const HmacShortDigest = HmacSHA512(process.env.PATHPASS + hashDigest, process.env.PRIVATEKEY);
+    // console.log(HmacShortDigest);
 
-    const hmacDigest = base64.stringify(HmacSHA512(process.env.PATHPASS + hashDigest + process.env.PRIVATEKEY)); 
+    const hmacDigest = base64.stringify(HmacShortDigest); 
+    // console.log(hmacDigest);
 
     return hmacDigest;
 }
