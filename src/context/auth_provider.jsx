@@ -2,6 +2,7 @@ import { useReducer } from 'react';
 import AuthContext from "./auth_context";
 import AuthReducer from "./auth_reducer";
 import Types from './types/types';
+import { decodeJWTInfo } from '../services/jwt';
 
 const init = () => {
     const user = JSON.parse( localStorage.getItem('user') );
@@ -14,12 +15,18 @@ const init = () => {
 
 const AuthProvider = ({ children }) => {
 
-    const [ AuthState, dispatch ] = useReducer( AuthReducer, {}, init );
+    const [ state, dispatch ] = useReducer( AuthReducer, {}, init );
 
-    const login = (userData) => {
+    const signInContext = ( token ) => {
 
-        userData = {
-            id: 'aaa-bbb-111', name: "nombre", rol: 2
+        const tokenData = decodeJWTInfo( token );
+
+        const userData = {
+            uuid: tokenData.uuid,
+            email: tokenData.email,
+            username: tokenData.username,
+            image_profile: tokenData.image_profile,
+            id_rol: tokenData.id_rol
         }
 
         const action = {
@@ -27,25 +34,27 @@ const AuthProvider = ({ children }) => {
             payload: userData
         }
 
+        sessionStorage.setItem('token', JSON.stringify(token))
         localStorage.setItem('user', JSON.stringify(userData));
         dispatch(action);
     };
 
-    const logout = () => {
+    const logOutContext = () => {
 
         const action = {
             type: Types.logout
         }
 
+        sessionStorage.removeItem('token');
         localStorage.removeItem('user'); 
         dispatch(action);
     };
 
     return (
         <AuthContext.Provider value={{
-            ...AuthState, 
-            login, 
-            logout 
+            ...state, 
+            signInContext, 
+            logOutContext 
         }}>
           {children}
         </AuthContext.Provider>

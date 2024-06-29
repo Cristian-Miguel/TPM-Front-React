@@ -7,7 +7,8 @@ const AuthReducer = ( state = {}, action ) => {
             return {
                 ...state,
                 logged: true,
-                user: action.payload
+                user: action.payload.token,
+                token: action.payload.token
             };
 
         case Types.logout:
@@ -18,7 +19,8 @@ const AuthReducer = ( state = {}, action ) => {
         case Types.signup:
             return {
                 logged: true,
-                user: action.payload
+                user: action.payload,
+                token: action.payload.token
             };
 
         default:

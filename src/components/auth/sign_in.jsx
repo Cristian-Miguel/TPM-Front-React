@@ -1,83 +1,85 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import FrontImage from '../../assets/hermosa-playa-tropical.jpg';
 import { Button, Space, Col, Row, Modal, Form, Input, Checkbox, message } from "antd";
-import { signInUser } from '../../services/api/auth_api';
+import { useAuth } from '../../hooks/useAuth';
 import '../../css/sign_in.css';
 
 const SignIn = () => {
-    const [form] = Form.useForm();
-    const [open, setOpen] = useState(false);
-    const [confirmLoading, setConfirmLoading] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const navigate = useNavigate();
+    const { signIn, form, signInComponents, setSignInComponents } = useAuth( Form );
     
     const showModal = () => {
-        setOpen(true);
-    };
-
-    const handleOk = () => {
-        setConfirmLoading(true);
-        setLoading(true);
-        onSignIn();
+        setSignInComponents({
+            ...signInComponents,
+            open:true
+        });
     };
 
     const handleCancel = () => {
-        console.log('Clicked cancel button');
-        setOpen(false);
+        if(!signInComponents.loading) {
+            form.resetFields();
+            setSignInComponents({
+                ...signInComponents,
+                open:false,
+                loading:false,
+                emailStatus:'',
+                passwordStatus:'',
+            });
+        } else {
+            message.error('Can\'t close the model while this is sending the validation credentials!')
+        }
     };
 
-    const onSignIn = () => {
-        form.validateFields().then( (values) => {
-
-            setTimeout(async( ) => {
-
-                try {
-                    const response = await signInUser(values);
-
-                    message.success('Sign in successful!');
-
-                    if (response && response.success) {
-                        setOpen(false);
-                        navigate('/');
-                    } else {
-                        message.error('Sign in failed. Please check your username and password.');
-                    }
-                } catch (error) {
-                    message.error('An error occurred. Please try again.');
-                } finally {
-                    setLoading(false);
-                    setConfirmLoading(false);
-                }
-                
-            }, 1500);
-
-        }).catch((errorInfo) => {
-            message.error('Please fill in all required fields correctly.');
-            setLoading(false);
+    const handleClickSignIn = () => {
+        setSignInComponents({
+            ...signInComponents,
+            confirmLoading:true,
+            loading:true,
+            emailStatus:'validating',
+            passwordStatus:'validating',
         });
+        signIn();
+    };
+
+    const handleKeySignIn = ( event ) => {
+        if (event.key === 'Enter') {
+            setSignInComponents({
+                ...signInComponents,
+                confirmLoading:true,
+                loading:true,
+                emailStatus:'validating',
+                passwordStatus:'validating',
+            });
+            signIn();
+        } else {
+            setSignInComponents({
+                ...signInComponents,
+                confirmLoading:false,
+                loading:false,
+            });
+        }
     };
 
     return(
         <>
             <div id="SignInComponent">
                 <Row style={{ minHeight:'100vh' }}>
-                    <Col span={8}>
+                    <Col span={ 8 }>
                         <figure id = 'ImageContainer'>
-                            <img src={FrontImage} alt='beach' id="ImageSignIn"/>
+                            <img src={ FrontImage } alt='beach' id="ImageSignIn"/>
                         </figure>
                     </Col>
-                    <Col span={12} push={2} pull={2}>
+                    <Col span={ 12 } push={ 2 } pull={ 2 }>
 
-                        <Row justify={'center'} align={'bottom'} style={{ height:"20%" }}>
-                            <Space direction='vertical' size={"large"}>
+                        <Row justify={ 'center' } align={ 'bottom' } style={{ height:"20%" }}>
+                            <Space direction='vertical' size={ 'large' }>
                                 <h1>Discover Mich</h1>
                             </Space>
                         </Row>
 
-                        <Row justify={'center'} align={"top"} style={{ height:"80%" }}>
+                        <Row justify={ 'center' } align={ 'top' } style={{ height:"80%" }}>
 
-                            <Space direction='vertical' size={20}>
+                            <Space direction='vertical' size={ 20 }>
                                 <h2>Enjoy travel with us.</h2>
 
                                 <Button type="primary" htmlType="button" style={{ width:400}}>
@@ -105,7 +107,7 @@ const SignIn = () => {
                                 <Button 
                                     type="primary" 
                                     htmlType="button" 
-                                    onClick={showModal}
+                                    onClick={ showModal }
                                     style={{ width:400, marginTop:80 }}
                                 >
                                     Sign in
@@ -113,11 +115,11 @@ const SignIn = () => {
 
                                 <Modal
                                     title="Email sign in"
-                                    open={open}
-                                    confirmLoading={confirmLoading}
-                                    onCancel={handleCancel}
+                                    open={signInComponents.open}
+                                    confirmLoading={ signInComponents.confirmLoading }
+                                    onCancel={ handleCancel }
                                     footer={[
-                                        <Button key="cancel" onClick={handleCancel}>
+                                        <Button key="cancel" onClick={ handleCancel }>
                                           Return
                                         </Button>,
                                     ]}
@@ -127,12 +129,14 @@ const SignIn = () => {
                                         layout="vertical"
                                         style={{ maxWidth: 600  }}
                                         autoComplete='off'
-                                        form={form}
+                                        form={ form }
                                     >
 
                                         <Form.Item
                                             label="Email"
                                             name="email"
+                                            validateStatus={ signInComponents.emailStatus }
+                                            help= { signInComponents.emailStatus === 'error' ? 'Check your email.' : '' }
                                             rules={[
                                                 {
                                                     type:'email',
@@ -141,28 +145,32 @@ const SignIn = () => {
                                                 },
                                             ]}
                                             >
-                                            <Input />
+                                            <Input onKeyUpCapture={ handleKeySignIn } />
                                         </Form.Item>
 
                                         <Form.Item
                                             label="Password"
                                             name="password"
+                                            validateStatus={ signInComponents.passwordStatus }
+                                            help={ signInComponents.passwordStatus === 'error' ? 'Check your password.' : '' }
                                             rules={[
                                                 {
                                                     type:'string',
                                                     required: true,
+                                                    min:8,
+                                                    max:16,
                                                     message: 'Please input your password!',
                                                 },
                                             ]}
-                                            style={{marginBottom: 0}}
+                                            style={{ marginBottom: 0 }}
                                             >
-                                            <Input.Password />
+                                            <Input.Password onKeyUp={ handleKeySignIn } />
                                         </Form.Item>
 
                                         <Form.Item
                                             name="ForgotPassword"
                                             valuePropName="link"
-                                            style={{marginTop:0, marginBottom: 0}}
+                                            style={{ marginTop:0, marginBottom: 0 }}
                                             >
                                             <Button type="link">Forgot password?</Button>
                                         </Form.Item>
@@ -170,13 +178,13 @@ const SignIn = () => {
                                         <Form.Item
                                             name="remember"
                                             valuePropName="checked"
-                                            style={{marginTop:5, marginBottom: 5}}
+                                            style={{ marginTop:5, marginBottom: 5 }}
                                             >
                                             <Checkbox>Remember me</Checkbox>
                                         </Form.Item>
 
                                         <Form.Item 
-                                            style={{marginTop:0, marginBottom: 15}}
+                                            style={{ marginTop:0, marginBottom: 15 }}
                                             wrapperCol={{
                                                 offset: 14,
                                                 span: 5
@@ -184,8 +192,8 @@ const SignIn = () => {
                                             <Button 
                                                 key="submit" 
                                                 type="primary" 
-                                                loading={loading} 
-                                                onClick={handleOk}
+                                                loading={ signInComponents.loading } 
+                                                onClick={ handleClickSignIn }
                                                 style={{ width:200 }}
                                             >
                                                 Sign in

@@ -10,7 +10,7 @@ export const hashPassword = (password) => {
     
     const HmacShortDigest = HmacSHA512(process.env.REACT_APP_PATH_PASS + hashDigest, process.env.REACT_APP_PRIVATE_KEY);
 
-    const hmacDigest = base64.stringify(HmacShortDigest); 
+    const hmacDigestBase64 = base64.stringify(HmacShortDigest); 
 
-    return hmacDigest;
+    return hmacDigestBase64.toString();
 }

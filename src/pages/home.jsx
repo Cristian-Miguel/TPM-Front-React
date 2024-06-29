@@ -24,7 +24,7 @@ const Home = () => {
                             <Col span={2}></Col>
                             <Col span={20}>
                                 <figure id = 'PromosImageContainer'>
-                                    <div class="overlay"></div>
+                                    <div className="overlay"></div>
                                     <h1 style={{ textAlign:'center' }} >Discover Mich</h1>
                                     <p style={{ textAlign:'center' }} >Discover your best adventure</p>
                                     <img src={PromosImage} alt="Main title" id='PromosContainer' />
