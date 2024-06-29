@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PlusOutlined, LoadingOutlined  } from '@ant-design/icons';
 import { DatePicker, Upload, Col, Row, Form, Input, message, Space, Button, Spin, Flex, InputNumber } from "antd";
-import { signUpUser } from '../services/api/sign_up'
-import '../css/sign_up.css'
+import { signUpUser } from '../../services/api/auth_api';
+import '../../css/sign_up.css';
 
 const getBase64 = (img, callback) => {
     const reader = new FileReader();

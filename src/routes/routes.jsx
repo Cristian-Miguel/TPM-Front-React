@@ -1,16 +1,16 @@
 import { Route, Routes } from 'react-router-dom';
 
 import AccountSetting from '../pages/account_settings';
-import Chat from '../pages/chat';
+import Chat from '../pages/user/chat';
 import Home from '../pages/home';
-import Favorites from '../pages/favorites';
+import Favorites from '../pages/user/favorites';
 import InfoProduct from '../pages/info_product';
-import Message from '../pages/messages';
-import Payment from '../pages/payment';
+import Message from '../pages/user/chat_list';
+import Payment from '../pages/payment/payment';
 import Products from '../pages/products';
 import Reservation from '../pages/reservation';
-import SignUp from '../pages/sign_up';
-import SignIn from '../pages/sign_in';
+import SignUp from '../components/auth/sign_up';
+import SignIn from '../components/auth/sign_in';
 
 import PrivateRoute from './private_route';
 import PublicRoute from './public_route'

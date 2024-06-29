@@ -5,17 +5,12 @@ const sha256Encode = (password) => {
     return crypto_js.SHA256(password);
 }
 
-export const hashPassword = async (password) => {
+export const hashPassword = (password) => {
     const hashDigest = sha256Encode(password);
-    // console.log(hashDigest);
-    // console.log(process.env.REACT_APP_PATHPASS);
-    // console.log(process.env.REACT_APP_PRIVATEKEY);
     
-    const HmacShortDigest = HmacSHA512(process.env.PATHPASS + hashDigest, process.env.PRIVATEKEY);
-    // console.log(HmacShortDigest);
+    const HmacShortDigest = HmacSHA512(process.env.REACT_APP_PATH_PASS + hashDigest, process.env.REACT_APP_PRIVATE_KEY);
 
     const hmacDigest = base64.stringify(HmacShortDigest); 
-    // console.log(hmacDigest);
 
     return hmacDigest;
 }
