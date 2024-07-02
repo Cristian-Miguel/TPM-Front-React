@@ -19,7 +19,7 @@ export const signInAPI = async (data) => {
     }
 };
 
-export const signUpUser = async (data) => {
+export const signUpAPI = async (data) => {
     try {
         const hashedPassword = await hashPassword(data.password);
 
@@ -31,7 +31,8 @@ export const signUpUser = async (data) => {
         const response = await axios.post(URL_API_SIGN_UP, payload);
 
         return response.data;
+
     } catch (error) {
-        throw error.response.data;
+       console.log( error );
     }
 };

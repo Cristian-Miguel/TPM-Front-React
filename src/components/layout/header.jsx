@@ -15,7 +15,7 @@ const MainHeader = () => {
     const [ items, setItemsProfile ] = useState([]);
     const [ pages, setPage ] = useState([]);
     const navigate = useNavigate();
-    const { logged } = useContext( AuthContext );
+    const { logged, logOutContext } = useContext( AuthContext );
 
     useEffect(() => {
         if(logged){
@@ -130,7 +130,6 @@ const MainHeader = () => {
     };
 
     const handleMenuClick = (e) => {
-        message.info('Click on menu item');
         console.log('click', e);
         if(items.length === 2){
             switch(e.key){
@@ -155,7 +154,8 @@ const MainHeader = () => {
                     navigate('/help');
                     break;
                 case '4':
-                    navigate('/home');
+                    navigate('/signin');
+                    logOutContext();
                     break;
                 default:
                     break;
@@ -206,9 +206,9 @@ const MainHeader = () => {
     return(
         <>
             <Layout.Header style={{ backgroundColor:secondColor, width:'100%' }}>
-                <Row align={'middle'} justify={'center'} style={{ height:'100%' }}>
+                <Row align={ 'middle' } justify={ 'center' } style={{ height:'100%' }}>
                     
-                    <Col span={4} push={1}>
+                    <Col span={ 4 } push={ 1 }>
                         <Flex justify='left'>
                             <Button style={{ backgroundColor:secondColor }} onClick={showDrawer}>
                                 <MenuOutlined/>
@@ -216,11 +216,11 @@ const MainHeader = () => {
                         </Flex>
                     </Col>
                     
-                    <Col span={14}></Col>
+                    <Col span={ 14 }></Col>
 
-                    <Col span={4} pull={1}>
+                    <Col span={ 4 } pull={ 1 }>
                         <Flex justify='right'>
-                            <Dropdown menu={menuProps}>
+                            <Dropdown menu={ menuProps }>
                                 <Button 
                                     style={{ 
                                         backgroundColor:secondColor, 
@@ -244,16 +244,16 @@ const MainHeader = () => {
             <Drawer
                 title="Menu"
                 placement='left'
-                closable={false}
-                onClose={onClose}
-                open={open}
+                closable={ false }
+                onClose={ onClose }
+                open={ open }
                 key='menuDrawer'
                 style={{ backgroundColor:firstColor100 }}
             >
                 <Menu
-                    onClick={onChoosePage}
+                    onClick={ onChoosePage }
                     mode="inline"
-                    items={pages}
+                    items={ pages }
                     style={{ backgroundColor:firstColor100 }}
                 />
             </Drawer>

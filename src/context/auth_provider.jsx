@@ -4,16 +4,22 @@ import AuthReducer from "./auth_reducer";
 import Types from './types/types';
 import { decodeJWTInfo } from '../services/jwt';
 
-const init = () => {
-    const user = JSON.parse( localStorage.getItem('user') );
-
-    return {
-        logged: !!user,
-        user: user
-    }
-}
-
 const AuthProvider = ({ children }) => {
+
+    const init = () => {
+        const user = JSON.parse( localStorage.getItem( 'user' ) );
+        const token = JSON.parse( sessionStorage.getItem("token") );
+
+        const tokenData = decodeJWTInfo( token );
+    
+        const fechaExp = new Date(tokenData.exp * 1000).toLocaleString();
+        const fechaIAT = new Date(tokenData.iat * 1000).toLocaleString();
+    
+        return {
+            logged: !!user,
+            user: user
+        }
+    }
 
     const [ state, dispatch ] = useReducer( AuthReducer, {}, init );
 

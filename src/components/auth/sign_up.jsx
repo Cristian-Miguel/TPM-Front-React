@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { PlusOutlined, LoadingOutlined  } from '@ant-design/icons';
 import { DatePicker, Upload, Col, Row, Form, Input, message, Space, Button, Spin, Flex, InputNumber } from "antd";
-import { signUpUser } from '../../services/api/auth_api';
+import { useAuth } from '../../hooks/useAuth';
 import '../../css/sign_up.css';
 
 const getBase64 = (img, callback) => {
@@ -12,49 +11,33 @@ const getBase64 = (img, callback) => {
 };
 
 const SignUp = () => {
-    const [form] = Form.useForm();
-    const [loading, setLoading] = useState(false);
-    const [spinning, setSpinning] = React.useState(false);
-    const [imageUrl, setImageUrl] = useState();
-    const navigate = useNavigate();
+    // const [form] = Form.useForm();
+    // const [loading, setLoading] = useState(false);
+    // const [spinning, setSpinning] = React.useState(false);
+    // const [imageUrl, setImageUrl] = useState();
+    const { signUp, form, signUpComponents, setSignUpComponents } = useAuth( Form );
 
-    const signUp = () => {
-        form.validateFields().then( (values) => {
-            setSpinning(true);
-
-            setTimeout(async() => {
-                const data = {
-                    ...values,
-                    birth_day: values.birth_day.format('YYYY-MM-DDThh:mm:ss'),
-                    image_profile: imageUrl
-                };
-
-                await signUpUser(data);
-
-                message.success('Registration successful!');
-
-                setLoading(false);
-                navigate('/');
-                setSpinning(false);
-
-            }, 1500);
-
-        }).catch((errorInfo) => {
-            message.error('Please fill in all required fields correctly.');
-        });
+    const handlerSignUp = () => {
+        signUp();
     }
 
     const beforeUpload = (file) => {
         const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
         if (!isJpgOrPng) {
-            setImageUrl();
-            setLoading(false);
+            setSignUpComponents({
+                ...signUpComponents,
+                loading:false,
+                imageUrl: null
+            });
           message.error('You can only upload JPG/PNG file!');
         }
         const isLt2M = file.size / 1024 / 1024 < 2;
         if (!isLt2M) {
-            setImageUrl();
-            setLoading(false);
+            setSignUpComponents({
+                ...signUpComponents,
+                loading: false,
+                imageUrl: null
+            });
           message.error('Image must smaller than 2MB!');
         }
         return isJpgOrPng && isLt2M;
@@ -63,15 +46,21 @@ const SignUp = () => {
     const handleChange = (info) => {
 
         if (info.file.status === 'uploading') {
-          setLoading(true);
+            setSignUpComponents({
+                ...signUpComponents,
+                loading: false
+            });
           return;
         }
 
         if (info.file.status === 'done') {
           // Get this url from response in real world.
           getBase64(info.file.originFileObj, (url) => {
-            setLoading(false);
-            setImageUrl(url);
+            setSignUpComponents({
+                ...signUpComponents,
+                loading: false,
+                imageUrl: url
+            });;
           });
         }
 
@@ -96,7 +85,7 @@ const SignUp = () => {
           }}
           type="button"
         >
-          {loading ? <LoadingOutlined /> : <PlusOutlined />}
+          {signUpComponents.loading ? <LoadingOutlined /> : <PlusOutlined />}
           <div
             style={{
               marginTop: 8,
@@ -134,9 +123,9 @@ const SignUp = () => {
                                 onChange={handleChange}
                                 
                             >
-                                {imageUrl ? (
+                                {signUpComponents.imageUrl ? (
                                 <img
-                                    src={imageUrl}
+                                    src={ signUpComponents.imageUrl }
                                     alt="avatar"
                                     style={{
                                     width: '100%',
@@ -334,7 +323,7 @@ const SignUp = () => {
                                     Reset
                                 </Button>
 
-                                <Button type="primary" htmlType="submit" style={{ width:'300px' }} onClick={signUp}>
+                                <Button type="primary" htmlType="submit" style={{ width:'300px' }} onClick={ handlerSignUp }>
                                     Submit
                                 </Button>
                             </Space>
@@ -348,7 +337,7 @@ const SignUp = () => {
             <Flex gap="small">
                 <Spin 
                     tip="Loading" 
-                    spinning={spinning} 
+                    spinning={ signUpComponents.spinning } 
                     fullscreen
                 > 
                     <div 
