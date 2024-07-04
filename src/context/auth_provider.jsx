@@ -11,9 +11,14 @@ const AuthProvider = ({ children }) => {
         const token = JSON.parse( sessionStorage.getItem("token") );
 
         const tokenData = decodeJWTInfo( token );
-    
-        const fechaExp = new Date(tokenData.exp * 1000).toLocaleString();
-        const fechaIAT = new Date(tokenData.iat * 1000).toLocaleString();
+        
+        const dateExp = new Date(tokenData.exp * 1000).toLocaleString();
+        const now = new Date().toLocaleString();
+
+        if(now > dateExp){
+            user = null;
+            token = null;
+        }
     
         return {
             logged: !!user,
